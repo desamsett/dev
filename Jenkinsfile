@@ -1,31 +1,16 @@
 node('master') 
 {
-    stage('ContinuousDownload') 
-    {
-      git 'https://github.com/selenium-saikrishna/maven.git'
-    }
-    
-    stage('ContinuousBuild')
-    {
-        sh label: '', script: 'mvn package'
-    }
-    stage('ContinuousDeployment')
-    {
-        sh label: '', script: 'scp /home/ubuntu/.jenkins/workspace/ScriptedPipeline/webapp/target/webapp.war ubuntu@172.31.23.186:/var/lib/tomcat8/webapps/qaenv.war'
-    }
-    stage('ContinuousTesting')
-    {
-        git 'https://github.com/selenium-saikrishna/TestingNew.git'
-        sh label: '', script: 'java -jar /home/ubuntu/.jenkins/workspace/ScriptedPipeline/testing.jar'
-        
-    }
-    stage('ContinuousDelivery')
-    {
-        input message: 'Waiting for Approval from Delivery Team', submitter: 'Ravi'
-        sh label: '', script: 'scp /home/ubuntu/.jenkins/workspace/ScriptedPipeline/webapp/target/webapp.war ubuntu@172.31.20.249:/var/lib/tomcat8/webapps/prodenv.war'
-    }
-    
-    
-    
-    
+   stage('continuousdownload') 
+   {
+   git 'https://github.com/desamsett/dev.git'
+}
+stage('continuousbuild')
+{
+    sh label: '', script: 'mvn package'
+}
+stage('continuousdeploy')
+{
+input message: 'Approval from prod team', submitter: 'admin'
+sh label: '', script: 'scp "/home/ubuntu/.jenkins/workspace/scripted pipeline/webapp/target/webapp.war" ubuntu@172.31.4.225:/home/ubuntu/apache-tomcat-8.5.41/webapps'
+}
 }
